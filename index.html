@@ -3,7 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IntellibizOps – Business Intelligence for Polish SMEs</title>
+    <title>IntellibizOps - AI-Powered Business Operations</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-deep': '#050810',
+                        'bg-surface': '#0A0E1A',
+                        'accent-cyan': '#00D4FF',
+                        'accent-purple': '#7B61FF',
+                        'text-primary': '#E2E8F0',
+                        'text-muted': '#64748B',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -11,27 +38,74 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            color: #1a1a1a;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: #050810;
+            color: #E2E8F0;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
         }
 
-        header {
-            background: white;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            position: sticky;
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0E1A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00D4FF;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7B61FF;
+        }
+
+        /* Particle canvas */
+        #particleCanvas {
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        .header-content {
-            max-width: 1200px;
+        .content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            backdrop-filter: blur(0px);
+            background: rgba(5, 8, 16, 0);
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        nav.scrolled {
+            backdrop-filter: blur(10px);
+            background: rgba(10, 14, 26, 0.9);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-content {
+            max-width: 7xl;
             margin: 0 auto;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -40,46 +114,302 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #0052cc;
-            text-decoration: none;
+            background: linear-gradient(135deg, #00D4FF, #7B61FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
         }
 
-        nav {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
+        .btn-waitlist {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #00D4FF;
+            color: #00D4FF;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            font-size: 0.95rem;
         }
 
-        nav a {
-            color: #666;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
+        .btn-waitlist:hover {
+            background: #00D4FF;
+            color: #050810;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
         }
 
-        nav a:hover {
-            color: #0052cc;
-        }
-
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 4rem 2rem;
-        }
-
+        /* Hero section */
         .hero {
-            max-width: 700px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            animation: fadeIn 0.8s ease-in;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes fadeIn {
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .eyebrow {
+            font-size: 0.95rem;
+            color: #00D4FF;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            line-height: 1.2;
+            margin: 1rem 0;
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #00D4FF, #7B61FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subheadline {
+            font-size: 1.25rem;
+            color: #64748B;
+            margin: 1.5rem 0 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-form {
+            display: flex;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-form input {
+            padding: 1rem 1.5rem;
+            border: 1px solid #00D4FF;
+            background: rgba(0, 212, 255, 0.05);
+            color: #E2E8F0;
+            border-radius: 0.5rem;
+            min-width: 280px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .hero-form input:focus {
+            outline: none;
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .hero-form input::placeholder {
+            color: #64748B;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: #00D4FF;
+            color: #050810;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            background: #7B61FF;
+            box-shadow: 0 0 30px rgba(123, 97, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .trust-line {
+            margin-top: 2rem;
+            font-size: 0.95rem;
+            color: #64748B;
+        }
+
+        /* Section styling */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 7xl;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 3rem;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        /* Problem section */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(10, 14, 26, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 2rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: #00D4FF;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: #64748B;
+            line-height: 1.6;
+        }
+
+        /* How it works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00D4FF, #7B61FF);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .step p {
+            color: #64748B;
+            font-size: 0.95rem;
+        }
+
+        /* Features grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            padding: 2rem;
+            background: rgba(10, 14, 26, 0.6);
+            border: 1px solid rgba(123, 97, 255, 0.2);
+            border-radius: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            border-color: #7B61FF;
+            background: rgba(10, 14, 26, 0.9);
+            box-shadow: 0 0 20px rgba(123, 97, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Waitlist section */
+        .waitlist-section {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 97, 255, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 1rem;
+            text-align: center;
+            margin: 4rem auto;
+            max-width: 700px;
+        }
+
+        .waitlist-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .waitlist-section p {
+            color: #64748B;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: #64748B;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            background: rgba(10, 14, 26, 0.5);
+        }
+
+        footer p {
+            margin-bottom: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -87,247 +417,351 @@
             }
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #0052cc;
-            line-height: 1.2;
+        .fade-in {
+            opacity: 0;
         }
 
-        .tagline {
-            font-size: 1.25rem;
-            color: #555;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-            padding: 2rem;
-            background: rgba(255,255,255,0.7);
-            border-radius: 12px;
-        }
-
-        .feature {
-            text-align: center;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-title {
+        /* Success message */
+        .success-message {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #00D4FF;
+            color: #050810;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1a1a1a;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
         }
 
-        .feature-text {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .cta-section {
-            margin-top: 2rem;
-        }
-
-        .email-input {
-            width: 100%;
-            max-width: 400px;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .email-input:focus {
-            outline: none;
-            border-color: #0052cc;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 2rem;
-            background: #0052cc;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background: #0042a8;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .legal-links {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            font-size: 0.85rem;
-        }
-
-        .legal-links a {
-            color: #666;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .legal-links a:hover {
-            color: #0052cc;
-        }
-
-        footer {
-            background: white;
-            padding: 2rem;
-            text-align: center;
-            color: #999;
-            font-size: 0.85rem;
-            border-top: 1px solid #eee;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background: #e6f2ff;
-            color: #0052cc;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
             }
-
-            .tagline {
-                font-size: 1rem;
-            }
-
-            nav {
-                gap: 1rem;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            .legal-links {
-                flex-direction: column;
-                gap: 0.5rem;
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <a href="#" class="logo">IntellibizOps</a>
-            <nav>
-                <a href="#features">Features</a>
-                <a href="#waitlist">Early Access</a>
-            </nav>
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navbar -->
+    <nav id="navbar">
+        <div class="nav-content">
+            <div class="logo">IntellibizOps</div>
+            <button class="btn-waitlist" onclick="document.getElementById('email-input').focus(); document.getElementById('email-input').scrollIntoView({behavior: 'smooth'});">Join Waitlist</button>
         </div>
-    </header>
+    </nav>
 
-    <main class="main">
+    <div class="content">
+        <!-- Hero Section -->
         <section class="hero">
-            <div class="status-badge">🚀 Early Access – Polish SMEs</div>
-            <h1>Business Intelligence That Speaks Your Language</h1>
-            <p class="tagline">
-                Sales tracking, inventory, expenses, and AI-powered insights — built for Polish SMEs and cafés.
-                Manage your business with confidence.
-            </p>
-
-            <div class="features" id="features">
-                <div class="feature">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">Real-Time Analytics</div>
-                    <div class="feature-text">Track sales, inventory, and expenses at a glance</div>
+            <div class="hero-content">
+                <div class="eyebrow">AI-Powered Operations for Smart Businesses</div>
+                <h1>Run your business.<br><span>Let IntellibizOps handle the rest.</span></h1>
+                <p class="subheadline">Staff scheduling, inventory, menu, orders and AI insights — all in one place. You stay in control with a simple approval queue.</p>
+                <div class="hero-form">
+                    <input
+                        type="email"
+                        id="email-input"
+                        placeholder="Enter your email"
+                        onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
+                    >
+                    <button class="btn-primary" onclick="submitWaitlist()">Get Early Access</button>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">🤖</div>
-                    <div class="feature-title">AI Insights</div>
-                    <div class="feature-text">Smart recommendations powered by Anthropic Claude</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔐</div>
-                    <div class="feature-title">EU-First Security</div>
-                    <div class="feature-text">GDPR-compliant, data hosted in Germany</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">💰</div>
-                    <div class="feature-title">Xero + Stripe Ready</div>
-                    <div class="feature-text">Integrates with your accounting & payment tools</div>
-                </div>
-            </div>
-
-            <div class="cta-section" id="waitlist">
-                <input
-                    type="email"
-                    class="email-input"
-                    id="emailInput"
-                    placeholder="your@email.com"
-                    aria-label="Email address"
-                >
-                <button class="btn" onclick="joinWaitlist()">Get Early Access</button>
-            </div>
-
-            <div class="legal-links">
-                <a href="http://localhost:8501/privacy" target="_blank">Privacy Policy</a>
-                <a href="http://localhost:8501/terms" target="_blank">Terms of Service</a>
-                <a href="http://localhost:8501/subprocessors" target="_blank">Subprocessors</a>
+                <div class="trust-line">✨ Built for cafés, shops & SMEs</div>
             </div>
         </section>
-    </main>
 
-    <footer>
-        <p>&copy; 2026 IntellibizOps. Built for Polish SMEs. <a href="https://intellibizops.com" style="color: #0052cc; text-decoration: none;">intellibizops.com</a></p>
-    </footer>
+        <!-- Problem Section -->
+        <section class="section">
+            <h2>Sound familiar?</h2>
+            <div class="cards-grid">
+                <div class="card fade-in">
+                    <div class="card-icon">🔄</div>
+                    <h3>Too Many Apps</h3>
+                    <p>Juggling spreadsheets, booking apps, inventory systems, cash registers... it never ends.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon">⏰</div>
+                    <h3>No Time to Analyse</h3>
+                    <p>You're too busy running the shop to spot trends, fix problems, or plan ahead.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-icon">❌</div>
+                    <h3>Missed Shifts & Stock-outs</h3>
+                    <p>Staff gaps appear. Stock runs low. Opportunities slip away.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="section">
+            <h2>How IntellibizOps Works</h2>
+            <div class="steps">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <h3>AI Monitors</h3>
+                    <p>Your AI co-pilot watches everything 24/7.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Spots Issues</h3>
+                    <p>It finds gaps, low stock, scheduling problems.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <h3>You Approve</h3>
+                    <p>Nothing changes without your say-so. You're always in control.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section">
+            <h2>Everything You Need</h2>
+            <div class="features-grid">
+                <div class="feature fade-in">
+                    <div class="feature-icon">📅</div>
+                    <h3>Staff Scheduling</h3>
+                </div>
+                <div class="feature fade-in">
+                    <div class="feature-icon">📦</div>
+                    <h3>Inventory & Reorders</h3>
+                </div>
+                <div class="feature fade-in">
+                    <div class="feature-icon">🍽️</div>
+                    <h3>Menu Management</h3>
+                </div>
+                <div class="feature fade-in">
+                    <div class="feature-icon">💬</div>
+                    <h3>AI Chat Assistant</h3>
+                </div>
+                <div class="feature fade-in">
+                    <div class="feature-icon">💰</div>
+                    <h3>Financial Tracking</h3>
+                </div>
+                <div class="feature fade-in">
+                    <div class="feature-icon">✅</div>
+                    <h3>One Approval Queue</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Waitlist CTA -->
+        <section class="waitlist-section">
+            <h2>Be first when we launch</h2>
+            <p>Early access to IntellibizOps — no credit card required.</p>
+            <div class="hero-form" style="justify-content: center;">
+                <input
+                    type="email"
+                    placeholder="your@email.com"
+                    onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
+                    style="margin: 0;"
+                >
+                <button class="btn-primary" onclick="submitWaitlist()" style="margin: 0;">Join Waitlist</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p><strong>IntellibizOps</strong></p>
+            <p>© 2026 IntellibizOps. All rights reserved.</p>
+            <p>Simplifying business operations for owners who care about control.</p>
+            <p style="margin-top: 16px; font-size: 13px; opacity: 0.7;">
+                <a href="http://localhost:8501/?legal=privacy" style="color: inherit; text-decoration: underline;">Privacy Policy</a>
+                &nbsp;·&nbsp;
+                <a href="http://localhost:8501/?legal=terms" style="color: inherit; text-decoration: underline;">Terms of Service</a>
+                &nbsp;·&nbsp;
+                <a href="http://localhost:8501/?legal=subprocessors" style="color: inherit; text-decoration: underline;">Subprocessors</a>
+            </p>
+        </footer>
+    </div>
 
     <script>
-        function joinWaitlist() {
-            const email = document.getElementById('emailInput').value;
-            if (!email) {
-                alert('Please enter your email');
-                return;
+        // ============================================
+        // PARTICLE SYSTEM
+        // ============================================
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let mouseX = 0;
+        let mouseY = 0;
+        let scrollProgress = 0;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 1.5 + 0.5;
+                this.opacity = Math.random() * 0.3 + 0.1;
+                // Randomly assign color: cyan or gold
+                this.color = Math.random() > 0.5 ? '#00D4FF' : '#FFD700';
+                this.baseColor = this.color;
             }
-            if (!isValidEmail(email)) {
-                alert('Please enter a valid email');
-                return;
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Keep in bounds
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+
+                // Interaction with mouse
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxDist = 150;
+
+                if (dist < maxDist) {
+                    const force = (maxDist - dist) / maxDist;
+                    this.vx += (dx / dist) * force * 0.05;
+                    this.vy += (dy / dist) * force * 0.05;
+                    this.opacity = Math.min(0.8, this.opacity + 0.1);
+                } else {
+                    this.opacity = Math.max(0.1, this.opacity - 0.02);
+                }
+
+                // Max velocity cap
+                const maxVel = 2;
+                const vel = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                if (vel > maxVel) {
+                    this.vx = (this.vx / vel) * maxVel;
+                    this.vy = (this.vy / vel) * maxVel;
+                }
             }
-            const encodedEmail = encodeURIComponent(email);
-            window.location.href = `http://localhost:8501/?waitlist=1&email=${encodedEmail}`;
+
+            draw() {
+                const rgb = this.color === '#00D4FF' ? '0, 212, 255' : '255, 215, 0';
+                ctx.fillStyle = `rgba(${rgb}, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
 
-        function isValidEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+        // Initialize particles - increased from 60 to 150
+        for (let i = 0; i < 150; i++) {
+            particles.push(new Particle());
         }
 
-        document.getElementById('emailInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                joinWaitlist();
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 150) {
+                        const opacity = (1 - dist / 150) * 0.15;
+                        // Use the color of the first particle for the connection
+                        const rgb = particles[i].color === '#00D4FF' ? '0, 212, 255' : '255, 215, 0';
+                        ctx.strokeStyle = `rgba(${rgb}, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            drawConnections();
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+
+        // Mouse tracking
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Resize canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
         });
+
+        // Fade in elements on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach((el, index) => {
+            gsap.to(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 80%",
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: index * 0.1
+            });
+        });
+
+        // ============================================
+        // WAITLIST FORM — redirects to Streamlit waitlist for GDPR-compliant capture
+        // ============================================
+        const WAITLIST_REDIRECT_URL = 'http://localhost:8501/?waitlist=1';
+
+        function submitWaitlist() {
+            const emailInputs = document.querySelectorAll('input[type="email"]');
+            let email = '';
+            for (const input of emailInputs) {
+                if (input.value && input.value.trim()) {
+                    email = input.value.trim();
+                    break;
+                }
+            }
+
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            window.location.href = `${WAITLIST_REDIRECT_URL}&email=${encodeURIComponent(email)}`;
+        }
     </script>
 </body>
 </html>
