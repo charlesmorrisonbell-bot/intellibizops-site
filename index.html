@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntellibizOps – Business Intelligence for Polish SMEs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0052cc;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #0052cc;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero {
+            max-width: 700px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #0052cc;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: #555;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .cta-section {
+            margin-top: 2rem;
+        }
+
+        .email-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #0052cc;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: #0052cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #0042a8;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .legal-links {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .legal-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .legal-links a:hover {
+            color: #0052cc;
+        }
+
+        footer {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #e6f2ff;
+            color: #0052cc;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .legal-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">IntellibizOps</a>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#waitlist">Early Access</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="status-badge">🚀 Early Access – Polish SMEs</div>
+            <h1>Business Intelligence That Speaks Your Language</h1>
+            <p class="tagline">
+                Sales tracking, inventory, expenses, and AI-powered insights — built for Polish SMEs and cafés.
+                Manage your business with confidence.
+            </p>
+
+            <div class="features" id="features">
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Real-Time Analytics</div>
+                    <div class="feature-text">Track sales, inventory, and expenses at a glance</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI Insights</div>
+                    <div class="feature-text">Smart recommendations powered by Anthropic Claude</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-title">EU-First Security</div>
+                    <div class="feature-text">GDPR-compliant, data hosted in Germany</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-title">Xero + Stripe Ready</div>
+                    <div class="feature-text">Integrates with your accounting & payment tools</div>
+                </div>
+            </div>
+
+            <div class="cta-section" id="waitlist">
+                <input
+                    type="email"
+                    class="email-input"
+                    id="emailInput"
+                    placeholder="your@email.com"
+                    aria-label="Email address"
+                >
+                <button class="btn" onclick="joinWaitlist()">Get Early Access</button>
+            </div>
+
+            <div class="legal-links">
+                <a href="http://localhost:8501/privacy" target="_blank">Privacy Policy</a>
+                <a href="http://localhost:8501/terms" target="_blank">Terms of Service</a>
+                <a href="http://localhost:8501/subprocessors" target="_blank">Subprocessors</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 IntellibizOps. Built for Polish SMEs. <a href="https://intellibizops.com" style="color: #0052cc; text-decoration: none;">intellibizops.com</a></p>
+    </footer>
+
+    <script>
+        function joinWaitlist() {
+            const email = document.getElementById('emailInput').value;
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+            if (!isValidEmail(email)) {
+                alert('Please enter a valid email');
+                return;
+            }
+            const encodedEmail = encodeURIComponent(email);
+            window.location.href = `http://localhost:8501/?waitlist=1&email=${encodedEmail}`;
+        }
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        document.getElementById('emailInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                joinWaitlist();
+            }
+        });
+    </script>
+</body>
+</html>
