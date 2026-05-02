@@ -455,7 +455,10 @@
     <nav id="navbar">
         <div class="nav-content">
             <div class="logo">IntellibizOps</div>
-            <button class="btn-waitlist" onclick="document.getElementById('email-input').focus(); document.getElementById('email-input').scrollIntoView({behavior: 'smooth'});">Join Waitlist</button>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a id="login-link" href="https://app.intellibizops.com" class="btn-waitlist" style="text-decoration: none; display: inline-block;">Sign in</a>
+                <button class="btn-waitlist" onclick="document.getElementById('email-input').focus(); document.getElementById('email-input').scrollIntoView({behavior: 'smooth'});">Join Waitlist</button>
+            </div>
         </div>
     </nav>
 
@@ -574,6 +577,7 @@
             <p><strong>IntellibizOps</strong></p>
             <p>© 2026 IntellibizOps. All rights reserved.</p>
             <p>Simplifying business operations for owners who care about control.</p>
+            <!-- PRODUCTION: replace localhost:8501 with https://app.intellibizops.com before go-live -->
             <p style="margin-top: 16px; font-size: 13px; opacity: 0.7;">
                 <a href="http://localhost:8501/?legal=privacy" style="color: inherit; text-decoration: underline;">Privacy Policy</a>
                 &nbsp;·&nbsp;
@@ -585,6 +589,17 @@
     </div>
 
     <script>
+        // ============================================
+        // LOGIN LINK — point at local Caddy when on localhost, prod app otherwise
+        // ============================================
+        (function() {
+            const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+            const loginLink = document.getElementById('login-link');
+            if (loginLink) {
+                loginLink.href = isLocal ? 'http://localhost:8080/' : 'https://app.intellibizops.com/';
+            }
+        })();
+
         // ============================================
         // PARTICLE SYSTEM
         // ============================================
