@@ -590,13 +590,15 @@
 
     <script>
         // ============================================
-        // LOGIN LINK — point at local Caddy when on localhost, prod app otherwise
+        // LOGIN LINK
+        // PRE-PITCH: hardcoded to local Caddy (http://localhost:8080) so Charles's
+        // pitch demo can flow live-site → local app on his machine.
+        // POST-HETZNER: change to https://app.intellibizops.com.
         // ============================================
         (function() {
-            const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
             const loginLink = document.getElementById('login-link');
             if (loginLink) {
-                loginLink.href = isLocal ? 'http://localhost:8080/' : 'https://app.intellibizops.com/';
+                loginLink.href = 'http://localhost:8080/';
             }
         })();
 
