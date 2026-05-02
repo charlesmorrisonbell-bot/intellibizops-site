@@ -520,6 +520,37 @@
             color: #E2E8F0;
         }
 
+        /* Language switcher */
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #64748B;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0.2rem 0.35rem;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+            font-family: inherit;
+        }
+
+        .lang-btn:hover,
+        .lang-btn.active {
+            color: #00D4FF;
+        }
+
+        .lang-sep {
+            color: #334155;
+            font-size: 0.7rem;
+            user-select: none;
+        }
+
         /* Mobile fixes */
         @media (max-width: 640px) {
             .btn-waitlist {
@@ -594,8 +625,13 @@
         <div class="nav-content">
             <div class="logo">IntellibizOps</div>
             <div style="display: flex; gap: 0.75rem; align-items: center;">
-                <a id="login-link" href="https://app.intellibizops.com" class="btn-waitlist" style="text-decoration: none; display: inline-block;">Sign in</a>
-                <button class="btn-waitlist" onclick="document.getElementById('email-input').focus(); document.getElementById('email-input').scrollIntoView({behavior: 'smooth'});">Join Waitlist</button>
+                <div class="lang-switcher">
+                    <button id="lang-en" class="lang-btn active" onclick="switchLang('en')">EN</button>
+                    <span class="lang-sep">|</span>
+                    <button id="lang-pl" class="lang-btn" onclick="switchLang('pl')">PL</button>
+                </div>
+                <a id="login-link" href="https://app.intellibizops.com" class="btn-waitlist" style="text-decoration: none; display: inline-block;"><span data-en="Sign in" data-pl="Zaloguj się">Sign in</span></a>
+                <button class="btn-waitlist" onclick="document.getElementById('email-input').focus(); document.getElementById('email-input').scrollIntoView({behavior: 'smooth'});"><span data-en="Join Waitlist" data-pl="Dołącz do listy oczekujących">Join Waitlist</span></button>
             </div>
         </div>
     </nav>
@@ -604,9 +640,9 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <div class="eyebrow">AI-Powered Operations for Smart Businesses</div>
-                <h1>Run your business.<br><span>Let IntellibizOps handle the rest.</span></h1>
-                <p class="subheadline">Staff scheduling, inventory, menu, orders and AI insights — all in one place. You stay in control with a simple approval queue.</p>
+                <div class="eyebrow"><span data-en="AI-Powered Operations for Smart Businesses" data-pl="Operacje wspomagane przez AI dla inteligentnych firm">AI-Powered Operations for Smart Businesses</span></div>
+                <h1 data-en-line1="Run your business." data-pl-line1="Prowadź swój biznes.">Run your business.<br><span data-en="Let IntellibizOps handle the rest." data-pl="IntellibizOps zajmie się resztą.">Let IntellibizOps handle the rest.</span></h1>
+                <p class="subheadline"><span data-en="Staff scheduling, inventory, menu, orders and AI insights — all in one place. You stay in control with a simple approval queue." data-pl="Grafik pracowników, inwentaryzacja, menu, zamówienia i analizy AI — wszystko w jednym miejscu. Zachowujesz kontrolę dzięki prostej kolejce zatwierdzeń.">Staff scheduling, inventory, menu, orders and AI insights — all in one place. You stay in control with a simple approval queue.</span></p>
                 <div class="hero-form">
                     <input
                         type="email"
@@ -618,84 +654,84 @@
                         <!-- Replace 0x4AAAAAADH0SdtX3tHjPMyX with your key from Cloudflare Dashboard -->
                         <div class="cf-turnstile" id="hero-turnstile" data-sitekey="0x4AAAAAADH0SdtX3tHjPMyX" data-theme="dark"></div>
                     </div>
-                    <button class="btn-primary" onclick="submitWaitlist()">Get Early Access</button>
+                    <button class="btn-primary" onclick="submitWaitlist()"><span data-en="Get Early Access" data-pl="Uzyskaj wczesny dostęp">Get Early Access</span></button>
                 </div>
-                <p class="form-privacy-note">Your email is stored securely on EU servers. See <a href="/legal/privacy">Privacy Policy</a>.</p>
-                <div class="trust-line">✨ Built for cafés, shops & SMEs</div>
+                <p class="form-privacy-note"><span data-en="Your email is stored securely on EU servers. See " data-pl="Twój e-mail jest bezpiecznie przechowywany na serwerach w UE. Zobacz ">Your email is stored securely on EU servers. See </span><a href="/legal/privacy"><span data-en="Privacy Policy" data-pl="Politykę prywatności">Privacy Policy</span></a>.</p>
+                <div class="trust-line">✨ <span data-en="Built for cafés, shops & SMEs" data-pl="Stworzone dla kawiarni, sklepów i MŚP">Built for cafés, shops & SMEs</span></div>
             </div>
         </section>
 
         <!-- Problem Section -->
         <section class="section">
-            <h2>Sound familiar?</h2>
+            <h2><span data-en="Sound familiar?" data-pl="Brzmi znajomo?">Sound familiar?</span></h2>
             <div class="cards-grid">
                 <div class="card fade-in">
                     <div class="card-icon">🔄</div>
-                    <h3>Too Many Apps</h3>
-                    <p>Juggling spreadsheets, booking apps, inventory systems, cash registers... it never ends.</p>
+                    <h3><span data-en="Too Many Apps" data-pl="Za dużo aplikacji">Too Many Apps</span></h3>
+                    <p><span data-en="Juggling spreadsheets, booking apps, inventory systems, cash registers... it never ends." data-pl="Arkusze kalkulacyjne, aplikacje rezerwacji, systemy magazynowe, kasy... to nigdy się nie kończy.">Juggling spreadsheets, booking apps, inventory systems, cash registers... it never ends.</span></p>
                 </div>
                 <div class="card fade-in">
                     <div class="card-icon">⏰</div>
-                    <h3>No Time to Analyse</h3>
-                    <p>You're too busy running the shop to spot trends, fix problems, or plan ahead.</p>
+                    <h3><span data-en="No Time to Analyse" data-pl="Brak czasu na analizę">No Time to Analyse</span></h3>
+                    <p><span data-en="You're too busy running the shop to spot trends, fix problems, or plan ahead." data-pl="Jesteś zbyt zajęty prowadzeniem firmy, żeby dostrzegać trendy, rozwiązywać problemy i planować.">You're too busy running the shop to spot trends, fix problems, or plan ahead.</span></p>
                 </div>
                 <div class="card fade-in">
                     <div class="card-icon">❌</div>
-                    <h3>Missed Shifts & Stock-outs</h3>
-                    <p>Staff gaps appear. Stock runs low. Opportunities slip away.</p>
+                    <h3><span data-en="Missed Shifts & Stock-outs" data-pl="Luki w grafiku i braki magazynowe">Missed Shifts & Stock-outs</span></h3>
+                    <p><span data-en="Staff gaps appear. Stock runs low. Opportunities slip away." data-pl="Pojawiają się luki w grafiku. Zapasy maleją. Okazje uciekają.">Staff gaps appear. Stock runs low. Opportunities slip away.</span></p>
                 </div>
             </div>
         </section>
 
         <!-- How It Works -->
         <section class="section">
-            <h2>How IntellibizOps Works</h2>
+            <h2><span data-en="How IntellibizOps Works" data-pl="Jak działa IntellibizOps">How IntellibizOps Works</span></h2>
             <div class="steps">
                 <div class="step fade-in">
                     <div class="step-number">1</div>
-                    <h3>AI Monitors</h3>
-                    <p>Your AI co-pilot watches everything 24/7.</p>
+                    <h3><span data-en="AI Monitors" data-pl="AI monitoruje">AI Monitors</span></h3>
+                    <p><span data-en="Your AI co-pilot watches everything 24/7." data-pl="Twój asystent AI obserwuje wszystko całą dobę.">Your AI co-pilot watches everything 24/7.</span></p>
                 </div>
                 <div class="step fade-in">
                     <div class="step-number">2</div>
-                    <h3>Spots Issues</h3>
-                    <p>It finds gaps, low stock, scheduling problems.</p>
+                    <h3><span data-en="Spots Issues" data-pl="Wykrywa problemy">Spots Issues</span></h3>
+                    <p><span data-en="It finds gaps, low stock, scheduling problems." data-pl="Wykrywa luki, niskie stany i problemy z grafikiem.">It finds gaps, low stock, scheduling problems.</span></p>
                 </div>
                 <div class="step fade-in">
                     <div class="step-number">3</div>
-                    <h3>You Approve</h3>
-                    <p>Nothing changes without your say-so. You're always in control.</p>
+                    <h3><span data-en="You Approve" data-pl="Ty zatwierdzasz">You Approve</span></h3>
+                    <p><span data-en="Nothing changes without your say-so. You're always in control." data-pl="Nic się nie zmienia bez Twojej zgody. Zawsze masz kontrolę.">Nothing changes without your say-so. You're always in control.</span></p>
                 </div>
             </div>
         </section>
 
         <!-- Features Section -->
         <section class="section">
-            <h2>Everything You Need</h2>
+            <h2><span data-en="Everything You Need" data-pl="Wszystko, czego potrzebujesz">Everything You Need</span></h2>
             <div class="features-grid">
                 <div class="feature fade-in">
                     <div class="feature-icon">📅</div>
-                    <h3>Staff Scheduling</h3>
+                    <h3><span data-en="Staff Scheduling" data-pl="Grafik pracowników">Staff Scheduling</span></h3>
                 </div>
                 <div class="feature fade-in">
                     <div class="feature-icon">📦</div>
-                    <h3>Inventory & Reorders</h3>
+                    <h3><span data-en="Inventory & Reorders" data-pl="Magazyn i zamówienia">Inventory & Reorders</span></h3>
                 </div>
                 <div class="feature fade-in">
                     <div class="feature-icon">🍽️</div>
-                    <h3>Menu Management</h3>
+                    <h3><span data-en="Menu Management" data-pl="Zarządzanie menu">Menu Management</span></h3>
                 </div>
                 <div class="feature fade-in">
                     <div class="feature-icon">💬</div>
-                    <h3>AI Chat Assistant</h3>
+                    <h3><span data-en="AI Chat Assistant" data-pl="Asystent czatu AI">AI Chat Assistant</span></h3>
                 </div>
                 <div class="feature fade-in">
                     <div class="feature-icon">💰</div>
-                    <h3>Financial Tracking</h3>
+                    <h3><span data-en="Financial Tracking" data-pl="Śledzenie finansów">Financial Tracking</span></h3>
                 </div>
                 <div class="feature fade-in">
                     <div class="feature-icon">✅</div>
-                    <h3>One Approval Queue</h3>
+                    <h3><span data-en="One Approval Queue" data-pl="Jedna kolejka zatwierdzeń">One Approval Queue</span></h3>
                 </div>
             </div>
         </section>
@@ -727,8 +763,8 @@
 
         <!-- Waitlist CTA -->
         <section class="waitlist-section">
-            <h2>Be first when we launch</h2>
-            <p>Early access to IntellibizOps — no credit card required.</p>
+            <h2><span data-en="Be first when we launch" data-pl="Bądź pierwszy, gdy startujemy">Be first when we launch</span></h2>
+            <p><span data-en="Early access to IntellibizOps — no credit card required." data-pl="Wczesny dostęp do IntellibizOps — bez karty kredytowej.">Early access to IntellibizOps — no credit card required.</span></p>
             <div class="hero-form" style="justify-content: center;">
                 <input
                     type="email"
@@ -741,16 +777,16 @@
                     <!-- Replace 0x4AAAAAADH0SdtX3tHjPMyX with your key from Cloudflare Dashboard -->
                     <div class="cf-turnstile" id="cta-turnstile" data-sitekey="0x4AAAAAADH0SdtX3tHjPMyX" data-theme="dark"></div>
                 </div>
-                <button class="btn-primary" onclick="submitWaitlist()" style="margin: 0;">Join Waitlist</button>
+                <button class="btn-primary" onclick="submitWaitlist()" style="margin: 0;"><span data-en="Join Waitlist" data-pl="Dołącz do listy oczekujących">Join Waitlist</span></button>
             </div>
-            <p class="form-privacy-note" style="margin-top: 0.75rem;">Your email is stored securely on EU servers. See <a href="/legal/privacy">Privacy Policy</a>.</p>
+            <p class="form-privacy-note" style="margin-top: 0.75rem;"><span data-en="Your email is stored securely on EU servers. See " data-pl="Twój e-mail jest bezpiecznie przechowywany na serwerach w UE. Zobacz ">Your email is stored securely on EU servers. See </span><a href="/legal/privacy"><span data-en="Privacy Policy" data-pl="Politykę prywatności">Privacy Policy</span></a>.</p>
         </section>
 
         <!-- Footer -->
         <footer>
             <p><strong>IntellibizOps</strong></p>
             <p>© 2026 IntellibizOps. All rights reserved.</p>
-            <p>Simplifying business operations for owners who care about control.</p>
+            <p><span data-en="Simplifying business operations for owners who care about control." data-pl="Upraszczamy zarządzanie firmą dla właścicieli ceniących kontrolę.">Simplifying business operations for owners who care about control.</span></p>
             <p style="margin-top: 12px; font-size: 13px; opacity: 0.6;">Hosted in the EU by <strong>Hetzner</strong> (Falkenstein, Germany)</p>
             <p style="margin-top: 12px; font-size: 13px; opacity: 0.7;">
                 <a href="/legal/privacy" style="color: inherit; text-decoration: underline;">Privacy Policy</a>
@@ -765,16 +801,53 @@
     <!-- Cookie consent banner -->
     <div id="cookie-banner" role="dialog" aria-label="Cookie consent">
         <p class="cookie-banner-text">
-            This site uses minimal cookies for performance. By continuing, you agree.
-            <a href="/legal/privacy">Privacy Policy</a>
+            <span data-en="This site uses minimal cookies for performance. By continuing, you agree." data-pl="Ta strona używa minimalnej liczby plików cookie. Kontynuując, zgadzasz się.">This site uses minimal cookies for performance. By continuing, you agree.</span>
+            <a href="/legal/privacy"><span data-en="Privacy Policy" data-pl="Politykę prywatności">Privacy Policy</span></a>
         </p>
         <div style="display: flex; gap: 0.6rem; flex-shrink: 0;">
-            <button class="cookie-btn cookie-btn-accept" onclick="setCookieConsent('accepted')">Accept</button>
-            <button class="cookie-btn cookie-btn-reject" onclick="setCookieConsent('rejected')">Reject</button>
+            <button class="cookie-btn cookie-btn-accept" onclick="setCookieConsent('accepted')"><span data-en="Accept" data-pl="Akceptuj">Accept</span></button>
+            <button class="cookie-btn cookie-btn-reject" onclick="setCookieConsent('rejected')"><span data-en="Reject" data-pl="Odrzuć">Reject</span></button>
         </div>
     </div>
 
     <script>
+        // ============================================
+        // LANGUAGE SWITCHER
+        // ============================================
+        function switchLang(lang) {
+            localStorage.setItem('lang', lang);
+
+            // Update all data-en / data-pl text nodes
+            document.querySelectorAll('[data-en][data-pl]').forEach(function(el) {
+                el.innerText = el.getAttribute('data-' + lang);
+            });
+
+            // Special case: h1 first text node (avoids adding a gradient-inheriting span)
+            var heroH1 = document.querySelector('.hero h1');
+            if (heroH1 && heroH1.firstChild && heroH1.firstChild.nodeType === 3) {
+                heroH1.firstChild.textContent = heroH1.getAttribute('data-' + lang + '-line1') + '\n';
+            }
+
+            // Special case: input placeholders (attributes, not text nodes)
+            var heroInput = document.getElementById('email-input');
+            if (heroInput) {
+                heroInput.placeholder = lang === 'en' ? 'Enter your email' : 'Wpisz swój adres e-mail';
+            }
+            var ctaInput = document.getElementById('cta-email-input');
+            if (ctaInput) {
+                ctaInput.placeholder = lang === 'en' ? 'your@email.com' : 'twój@email.com';
+            }
+
+            // Highlight active language button
+            var enBtn = document.getElementById('lang-en');
+            var plBtn = document.getElementById('lang-pl');
+            if (enBtn) enBtn.classList.toggle('active', lang === 'en');
+            if (plBtn) plBtn.classList.toggle('active', lang === 'pl');
+        }
+
+        // Apply saved or default language on load
+        switchLang(localStorage.getItem('lang') || 'en');
+
         // ============================================
         // LOGIN LINK
         // PRE-PITCH: hardcoded to local Caddy (http://localhost:8080) so Charles's
