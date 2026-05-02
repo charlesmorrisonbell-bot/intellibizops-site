@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subprocessors — IntellibizOps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #050810; color: #E2E8F0; font-family: 'Inter', system-ui, sans-serif; line-height: 1.75; min-height: 100vh; }
+  .nav { padding: 1.25rem 2rem; border-bottom: 1px solid rgba(0,212,255,0.1); background: rgba(10,14,26,0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #00D4FF, #7B61FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+  .back-link { font-size: 0.875rem; color: #64748B; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+  .back-link:hover { color: #00D4FF; }
+  .content { max-width: 900px; margin: 0 auto; padding: 3.5rem 2rem 5rem; }
+  .eyebrow { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #00D4FF; font-weight: 600; margin-bottom: 0.75rem; }
+  h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem; }
+  .meta { font-size: 0.875rem; color: #64748B; margin-bottom: 2.5rem; }
+  h2 { font-size: 1.1rem; font-weight: 700; color: #00D4FF; margin-top: 2.25rem; margin-bottom: 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(0,212,255,0.15); }
+  p { margin: 0.65rem 0; color: #cbd5e1; }
+  ul { margin: 0.5rem 0 0.5rem 1.5rem; color: #cbd5e1; }
+  li { margin: 0.3rem 0; }
+  strong { color: #E2E8F0; }
+  a { color: #00D4FF; text-decoration: underline; }
+  a:hover { color: #7B61FF; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.875rem; }
+  th { background: rgba(0,212,255,0.06); color: #E2E8F0; font-weight: 600; padding: 0.6rem 0.9rem; text-align: left; border: 1px solid rgba(0,212,255,0.15); }
+  td { padding: 0.6rem 0.9rem; border: 1px solid rgba(0,212,255,0.1); color: #cbd5e1; vertical-align: top; }
+  .footer-nav { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(0,212,255,0.1); display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.875rem; }
+  .footer-nav a { color: #64748B; text-decoration: none; transition: color 0.2s; }
+  .footer-nav a:hover { color: #00D4FF; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="logo">IntellibizOps</a>
+  <a href="/" class="back-link">&#8592; Back to site</a>
+</nav>
+
+<div class="content">
+  <div class="eyebrow">Legal</div>
+  <h1>Subprocessors</h1>
+  <p class="meta">Last updated: 1 May 2026</p>
+
+  <p>We engage the following third parties to help operate IntellibizOps. Each is bound by a Data Processing Agreement (DPA) or equivalent safeguard.</p>
+
+  <h2>Active sub-processors</h2>
+  <table>
+    <tr>
+      <th>Sub-processor</th>
+      <th>Purpose</th>
+      <th>Where</th>
+      <th>Safeguard</th>
+      <th>Privacy info</th>
+    </tr>
+    <tr>
+      <td><strong>Hetzner Online GmbH</strong></td>
+      <td>Application hosting and primary database (Falkenstein, Germany)</td>
+      <td>EU</td>
+      <td>DPA on file, GDPR-aligned</td>
+      <td><a href="https://www.hetzner.com/legal" target="_blank" rel="noopener">hetzner.com/legal</a></td>
+    </tr>
+    <tr>
+      <td><strong>Stripe Payments Europe, Ltd</strong></td>
+      <td>Subscription billing and payment processing</td>
+      <td>Ireland (EU)</td>
+      <td>Stripe DPA</td>
+      <td><a href="https://stripe.com/privacy" target="_blank" rel="noopener">stripe.com/privacy</a></td>
+    </tr>
+    <tr>
+      <td><strong>Xero (Ireland) Ltd</strong></td>
+      <td>Accounting integration — only when <strong>you</strong> explicitly connect it; data flow is controlled by your Xero permissions</td>
+      <td>Ireland / UK</td>
+      <td>Customer-managed connection; Xero DPA</td>
+      <td><a href="https://www.xero.com/about/terms" target="_blank" rel="noopener">xero.com/about/terms</a></td>
+    </tr>
+    <tr>
+      <td><strong>Google LLC</strong></td>
+      <td>Transactional email delivery (Gmail SMTP) — invite emails, password resets, system notifications</td>
+      <td>US</td>
+      <td>EU-US Data Privacy Framework + Standard Contractual Clauses</td>
+      <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></td>
+    </tr>
+  </table>
+
+  <h2>Planned additions</h2>
+  <p>We will notify registered users by email <strong>at least 14 days before</strong> adding any new sub-processor. Customers may object to additions before they take effect.</p>
+  <table>
+    <tr>
+      <th>Planned</th>
+      <th>Purpose</th>
+      <th>Where</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td><strong>Anthropic PBC</strong></td>
+      <td>AI inference (Claude) — currently we run Ollama locally; Anthropic may be added for a higher-quality tier</td>
+      <td>US</td>
+      <td>DPF-certified, will sign DPA before activation</td>
+    </tr>
+    <tr>
+      <td>Encrypted backup provider (TBD)</td>
+      <td>Off-site backups</td>
+      <td>EU only</td>
+      <td>Not yet selected</td>
+    </tr>
+  </table>
+
+  <h2>Self-hosted components (no third-party data flow)</h2>
+  <p>These components run on our own EU servers and do not constitute sub-processors:</p>
+  <ul>
+    <li><strong>Ollama</strong> — local large language model inference</li>
+    <li><strong>PostgreSQL</strong> — primary database</li>
+    <li><strong>Caddy</strong> — HTTPS reverse proxy</li>
+  </ul>
+
+  <h2>Changes</h2>
+  <p>This list is updated whenever a sub-processor is added, removed, or has a change of purpose. The "Last updated" date at the top reflects the most recent change.</p>
+
+  <h2>Contact</h2>
+  <p>For questions about sub-processors or to request a copy of any DPA: <a href="mailto:charlesmorrisonbell@gmail.com">charlesmorrisonbell@gmail.com</a></p>
+
+  <div class="footer-nav">
+    <a href="/">&#8592; Home</a>
+    <a href="/legal/privacy">Privacy Policy</a>
+    <a href="/legal/terms">Terms of Service</a>
+  </div>
+</div>
+
+</body>
+</html>

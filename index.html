@@ -32,6 +32,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
+    <!-- Cloudflare Turnstile CAPTCHA
+         Set data-sitekey on each .cf-turnstile div to your Site Key from
+         Cloudflare Dashboard -> Turnstile -> Add site.
+         The placeholder "0x4AAAAAADH0SdtX3tHjPMyX" below must be replaced before deploying. -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
     <style>
         * {
             margin: 0;
@@ -406,6 +412,127 @@
             margin-bottom: 1rem;
         }
 
+        /* Trust strip */
+        .trust-strip {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            padding: 2.5rem 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            margin: 0 auto 2rem;
+            max-width: 900px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #94a3b8;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+
+        .trust-item svg {
+            flex-shrink: 0;
+            color: #00D4FF;
+        }
+
+        /* Privacy note beneath form */
+        .form-privacy-note {
+            font-size: 0.78rem;
+            color: #64748B;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        .form-privacy-note a {
+            color: #00D4FF;
+            text-decoration: underline;
+        }
+
+        /* Turnstile wrapper — centres the iframe inside a flex row */
+        .turnstile-row {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+
+        /* Cookie banner */
+        #cookie-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 26, 0.97);
+            border-top: 1px solid rgba(0, 212, 255, 0.15);
+            padding: 1rem 2rem;
+            z-index: 9999;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-banner-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .cookie-banner-text a {
+            color: #00D4FF;
+            text-decoration: underline;
+        }
+
+        .cookie-btn {
+            padding: 0.45rem 1.25rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .cookie-btn-accept {
+            background: #00D4FF;
+            color: #050810;
+        }
+
+        .cookie-btn-accept:hover {
+            background: #7B61FF;
+            color: #fff;
+        }
+
+        .cookie-btn-reject {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid rgba(100, 116, 139, 0.4);
+        }
+
+        .cookie-btn-reject:hover {
+            border-color: #64748B;
+            color: #E2E8F0;
+        }
+
+        /* Mobile button tightening */
+        @media (max-width: 640px) {
+            .btn-waitlist {
+                padding: 0.55rem 1rem;
+                font-size: 0.82rem;
+            }
+
+            .btn-primary {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -477,8 +604,13 @@
                         placeholder="Enter your email"
                         onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
                     >
+                    <div class="turnstile-row">
+                        <!-- Replace 0x4AAAAAADH0SdtX3tHjPMyX with your key from Cloudflare Dashboard -->
+                        <div class="cf-turnstile" id="hero-turnstile" data-sitekey="0x4AAAAAADH0SdtX3tHjPMyX" data-theme="dark"></div>
+                    </div>
                     <button class="btn-primary" onclick="submitWaitlist()">Get Early Access</button>
                 </div>
+                <p class="form-privacy-note">Your email is stored securely on EU servers. See <a href="/legal/privacy">Privacy Policy</a>.</p>
                 <div class="trust-line">✨ Built for cafés, shops & SMEs</div>
             </div>
         </section>
@@ -558,6 +690,31 @@
             </div>
         </section>
 
+        <!-- Trust strip -->
+        <div class="trust-strip">
+            <div class="trust-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Hosted in the EU (Germany)
+            </div>
+            <div class="trust-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                </svg>
+                GDPR Compliant — consent, access, erasure
+            </div>
+            <div class="trust-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Encrypted at rest (AES-128)
+            </div>
+        </div>
+
         <!-- Waitlist CTA -->
         <section class="waitlist-section">
             <h2>Be first when we launch</h2>
@@ -565,12 +722,18 @@
             <div class="hero-form" style="justify-content: center;">
                 <input
                     type="email"
+                    id="cta-email-input"
                     placeholder="your@email.com"
                     onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
                     style="margin: 0;"
                 >
+                <div class="turnstile-row">
+                    <!-- Replace 0x4AAAAAADH0SdtX3tHjPMyX with your key from Cloudflare Dashboard -->
+                    <div class="cf-turnstile" id="cta-turnstile" data-sitekey="0x4AAAAAADH0SdtX3tHjPMyX" data-theme="dark"></div>
+                </div>
                 <button class="btn-primary" onclick="submitWaitlist()" style="margin: 0;">Join Waitlist</button>
             </div>
+            <p class="form-privacy-note" style="margin-top: 0.75rem;">Your email is stored securely on EU servers. See <a href="/legal/privacy">Privacy Policy</a>.</p>
         </section>
 
         <!-- Footer -->
@@ -578,15 +741,27 @@
             <p><strong>IntellibizOps</strong></p>
             <p>© 2026 IntellibizOps. All rights reserved.</p>
             <p>Simplifying business operations for owners who care about control.</p>
-            <!-- PRODUCTION: replace localhost:8501 with https://app.intellibizops.com before go-live -->
-            <p style="margin-top: 16px; font-size: 13px; opacity: 0.7;">
-                <a href="http://localhost:8501/?legal=privacy" style="color: inherit; text-decoration: underline;">Privacy Policy</a>
+            <p style="margin-top: 12px; font-size: 13px; opacity: 0.6;">Hosted in the EU by <strong>Hetzner</strong> (Falkenstein, Germany)</p>
+            <p style="margin-top: 12px; font-size: 13px; opacity: 0.7;">
+                <a href="/legal/privacy" style="color: inherit; text-decoration: underline;">Privacy Policy</a>
                 &nbsp;·&nbsp;
-                <a href="http://localhost:8501/?legal=terms" style="color: inherit; text-decoration: underline;">Terms of Service</a>
+                <a href="/legal/terms" style="color: inherit; text-decoration: underline;">Terms of Service</a>
                 &nbsp;·&nbsp;
-                <a href="http://localhost:8501/?legal=subprocessors" style="color: inherit; text-decoration: underline;">Subprocessors</a>
+                <a href="/legal/subprocessors" style="color: inherit; text-decoration: underline;">Subprocessors</a>
             </p>
         </footer>
+    </div>
+
+    <!-- Cookie consent banner -->
+    <div id="cookie-banner" role="dialog" aria-label="Cookie consent">
+        <p class="cookie-banner-text">
+            This site uses minimal cookies for performance. By continuing, you agree.
+            <a href="/legal/privacy">Privacy Policy</a>
+        </p>
+        <div style="display: flex; gap: 0.6rem; flex-shrink: 0;">
+            <button class="cookie-btn cookie-btn-accept" onclick="setCookieConsent('accepted')">Accept</button>
+            <button class="cookie-btn cookie-btn-reject" onclick="setCookieConsent('rejected')">Reject</button>
+        </div>
     </div>
 
     <script>
@@ -778,7 +953,35 @@
                 return;
             }
 
-            window.location.href = `${WAITLIST_REDIRECT_URL}&email=${encodeURIComponent(email)}`;
+            // Capture Turnstile token (works when site key is configured).
+            // window.turnstile.getResponse() returns the most recently completed token.
+            let captcha = '';
+            if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
+                captcha = window.turnstile.getResponse() || '';
+            }
+
+            const url = `${WAITLIST_REDIRECT_URL}&email=${encodeURIComponent(email)}`
+                + (captcha ? `&captcha=${encodeURIComponent(captcha)}` : '');
+            window.location.href = url;
+        }
+
+        // ============================================
+        // COOKIE CONSENT BANNER
+        // ============================================
+        function _getCookie(name) {
+            return document.cookie.split(';').some(function(c) {
+                return c.trim().startsWith(name + '=');
+            });
+        }
+
+        function setCookieConsent(value) {
+            var expiry = 60 * 60 * 24 * 365; // 1 year in seconds
+            document.cookie = 'cookie_consent=' + value + '; path=/; max-age=' + expiry + '; SameSite=Lax';
+            document.getElementById('cookie-banner').style.display = 'none';
+        }
+
+        if (!_getCookie('cookie_consent')) {
+            document.getElementById('cookie-banner').style.display = 'flex';
         }
     </script>
 </body>
