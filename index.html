@@ -619,7 +619,7 @@
                     <button id="lang-pl" class="lang-btn" onclick="setLang('pl')">PL</button>
                 </div>
                 <a id="login-link" href="https://app.intellibizops.com" class="btn-waitlist" style="text-decoration: none; display: inline-block;"><span class="lang-en">Sign in</span><span class="lang-pl">Zaloguj</span></a>
-                <button class="btn-waitlist" onclick="document.getElementById('email-input').focus(); document.getElementById('email-input').scrollIntoView({behavior: 'smooth'});"><span class="lang-en">Join Waitlist</span><span class="lang-pl">Dołącz</span></button>
+                <button class="btn-waitlist" onclick="document.getElementById('name-input').focus(); document.getElementById('name-input').scrollIntoView({behavior: 'smooth'});"><span class="lang-en">Join Waitlist</span><span class="lang-pl">Dołącz</span></button>
             </div>
         </div>
     </nav>
@@ -633,14 +633,14 @@
                 <p class="subheadline"><span class="lang-en">Staff scheduling, inventory, menu, orders and AI insights — all in one place. You stay in control with a simple approval queue.</span><span class="lang-pl">Grafik pracowników, inwentaryzacja, menu, zamówienia i analizy AI — wszystko w jednym miejscu. Zachowujesz kontrolę dzięki prostej kolejce zatwierdzeń.</span></p>
                 <div class="hero-form">
                     <input
-                        type="email"
-                        id="email-input"
-                        placeholder="Enter your email"
+                        type="text"
+                        id="name-input"
+                        placeholder="Your name or business"
                         onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
                     >
                     <button class="btn-primary" onclick="submitWaitlist()"><span class="lang-en">Get Early Access</span><span class="lang-pl">Uzyskaj wczesny dostęp</span></button>
                 </div>
-                <p class="form-privacy-note"><span class="lang-en">Your email is stored securely on EU servers. See </span><span class="lang-pl">Twój e-mail jest bezpiecznie przechowywany na serwerach w UE. Zobacz </span><a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.</p>
+                <p class="form-privacy-note"><span class="lang-en">Your email is collected on the next step. See </span><span class="lang-pl">Adres e-mail podasz w kolejnym kroku. Zobacz </span><a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.</p>
                 <div class="trust-line">✨ <span class="lang-en">Built for cafés, shops & SMEs</span><span class="lang-pl">Stworzone dla kawiarni, sklepów i MŚP</span></div>
             </div>
         </section>
@@ -751,9 +751,9 @@
             <p><span class="lang-en">Early access to IntellibizOps — no credit card required.</span><span class="lang-pl">Wczesny dostęp do IntellibizOps — bez karty kredytowej.</span></p>
             <div class="hero-form" style="justify-content: center;">
                 <input
-                    type="email"
-                    id="cta-email-input"
-                    placeholder="your@email.com"
+                    type="text"
+                    id="cta-name-input"
+                    placeholder="Your name or business"
                     onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
                     style="margin: 0;"
                 >
@@ -763,7 +763,7 @@
                 </div>
                 <button class="btn-primary" onclick="submitWaitlist()" style="margin: 0;"><span class="lang-en">Join Waitlist</span><span class="lang-pl">Dołącz do listy oczekujących</span></button>
             </div>
-            <p class="form-privacy-note" style="margin-top: 0.75rem;"><span class="lang-en">Your email is stored securely on EU servers. See </span><span class="lang-pl">Twój e-mail jest bezpiecznie przechowywany na serwerach w UE. Zobacz </span><a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.</p>
+            <p class="form-privacy-note" style="margin-top: 0.75rem;"><span class="lang-en">Your email is collected on the next step. See </span><span class="lang-pl">Adres e-mail podasz w kolejnym kroku. Zobacz </span><a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.</p>
         </section>
 
         <!-- Footer -->
@@ -809,10 +809,10 @@
             }
 
             // Input placeholders (HTML attributes, not visible text nodes)
-            var heroInput = document.getElementById('email-input');
-            if (heroInput) heroInput.placeholder = lang === 'en' ? 'Enter your email' : 'Wpisz swój adres e-mail';
-            var ctaInput = document.getElementById('cta-email-input');
-            if (ctaInput) ctaInput.placeholder = lang === 'en' ? 'your@email.com' : 'twój@email.com';
+            var heroInput = document.getElementById('name-input');
+            if (heroInput) heroInput.placeholder = lang === 'en' ? 'Your name or business' : 'Twoje imię lub nazwa firmy';
+            var ctaInput = document.getElementById('cta-name-input');
+            if (ctaInput) ctaInput.placeholder = lang === 'en' ? 'Your name or business' : 'Twoje imię lub nazwa firmy';
 
             // Active button highlight
             var enBtn = document.getElementById('lang-en');
@@ -1005,28 +1005,25 @@
         const WAITLIST_REDIRECT_URL = 'http://localhost:8501/?waitlist=1';
 
         function submitWaitlist() {
-            const emailInputs = document.querySelectorAll('input[type="email"]');
-            let email = '';
-            for (const input of emailInputs) {
-                if (input.value && input.value.trim()) {
-                    email = input.value.trim();
-                    break;
-                }
+            const ids = ['name-input', 'cta-name-input'];
+            let name = '';
+            for (const id of ids) {
+                const el = document.getElementById(id);
+                if (el && el.value && el.value.trim()) { name = el.value.trim(); break; }
             }
 
-            if (!email || !email.includes('@')) {
-                alert('Please enter a valid email address');
+            if (!name) {
+                alert('Please enter your name or business name');
                 return;
             }
 
-            // Capture Turnstile token (works when site key is configured).
-            // window.turnstile.getResponse() returns the most recently completed token.
+            // Capture Turnstile token from CTA widget (single-use, short-lived)
             let captcha = '';
             if (window.turnstile && typeof window.turnstile.getResponse === 'function') {
                 captcha = window.turnstile.getResponse() || '';
             }
 
-            const url = `${WAITLIST_REDIRECT_URL}&email=${encodeURIComponent(email)}`
+            const url = `${WAITLIST_REDIRECT_URL}&name=${encodeURIComponent(name)}`
                 + (captcha ? `&captcha=${encodeURIComponent(captcha)}` : '');
             window.location.href = url;
         }
