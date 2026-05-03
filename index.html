@@ -14,7 +14,7 @@
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <script>
         tailwind.config = {
             theme: {
@@ -661,10 +661,6 @@
                         placeholder="Enter your email"
                         onkeypress="if(event.key==='Enter') document.querySelector('.btn-primary').click()"
                     >
-                    <div class="turnstile-row">
-                        <!-- Replace 0x4AAAAAADH0SdtX3tHjPMyX with your key from Cloudflare Dashboard -->
-                        <div class="cf-turnstile" id="hero-turnstile" data-sitekey="0x4AAAAAADH0SdtX3tHjPMyX" data-theme="dark"></div>
-                    </div>
                     <button class="btn-primary" onclick="submitWaitlist()"><span class="lang-en">Get Early Access</span><span class="lang-pl">Uzyskaj wczesny dostęp</span></button>
                 </div>
                 <p class="form-privacy-note"><span class="lang-en">Your email is stored securely on EU servers. See </span><span class="lang-pl">Twój e-mail jest bezpiecznie przechowywany na serwerach w UE. Zobacz </span><a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.</p>
@@ -936,8 +932,11 @@
             }
         }
 
-        // Initialize particles - increased from 60 to 150
-        for (let i = 0; i < 150; i++) {
+        const isMobile = window.innerWidth < 768;
+
+        // Fewer particles on mobile to reduce CPU/GPU load
+        const particleCount = isMobile ? 40 : 150;
+        for (let i = 0; i < particleCount; i++) {
             particles.push(new Particle());
         }
 
@@ -971,7 +970,7 @@
                 p.draw();
             });
 
-            drawConnections();
+            if (!isMobile) drawConnections();
             requestAnimationFrame(animateParticles);
         }
 
