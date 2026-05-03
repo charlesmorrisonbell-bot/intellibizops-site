@@ -6,14 +6,8 @@
     <title>IntellibizOps - AI-Powered Business Operations</title>
     <link rel="icon" type="image/jpeg" href="/assets/img/intellibizopsbrain.jpg">
     <link rel="apple-touch-icon" href="/assets/img/intellibizopsbrain.jpg">
-    <!-- Preconnect to external origins to reduce DNS + TLS latency -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <!-- Preconnect to Turnstile origin only (GSAP removed — animations now CSS-native) -->
     <link rel="preconnect" href="https://challenges.cloudflare.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-
-    <!-- GSAP for animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
 
     <!-- Cloudflare Turnstile CAPTCHA
          Set data-sitekey on each .cf-turnstile div to your Site Key from
@@ -574,8 +568,21 @@
             }
         }
 
+        /* CSS Scroll-Driven Animation — compositor thread, zero JS, no pop-in.
+           Supported: Chrome 115+, Edge 115+. Fallback below for Firefox/Safari. */
         .fade-in {
             opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-timeline: view();
+            animation-range: entry 10% entry 90%;
+        }
+
+        /* Fallback: browsers without scroll-driven animation support show content immediately */
+        @supports not (animation-timeline: view()) {
+            .fade-in {
+                opacity: 1;
+                animation: none;
+            }
         }
 
         /* Success message */
@@ -966,10 +973,11 @@
         });
 
         // ============================================
-        // SCROLL ANIMATIONS — wrapped in load so deferred GSAP is ready
+        // SCROLL ANIMATIONS — handled entirely by CSS (animation-timeline: view())
+        // No JS needed. GSAP removed.
         // ============================================
 
-        // Navbar scroll effect (no GSAP needed — plain JS)
+        // Navbar scroll effect — plain JS
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -979,25 +987,6 @@
             }
         }, { passive: true });
 
-        window.addEventListener('load', function() {
-            if (typeof gsap === 'undefined') return;
-            gsap.registerPlugin(ScrollTrigger);
-
-            // Fade in elements on scroll
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(function(el, index) {
-                gsap.to(el, {
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 80%",
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    delay: index * 0.1
-                });
-            });
-        });
 
         // ============================================
         // WAITLIST FORM — redirects to Streamlit waitlist for GDPR-compliant capture
