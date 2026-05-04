@@ -88,14 +88,10 @@
             align-items: center;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00D4FF, #7B61FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
+        .logo img {
+            height: 36px;
+            width: auto;
+            display: block;
         }
 
         .btn-waitlist {
@@ -604,7 +600,7 @@
     <!-- Navbar -->
     <nav id="navbar">
         <div class="nav-content">
-            <div class="logo">IntellibizOps</div>
+            <div class="logo"><img src="/assets/img/IntellibizopsLogo.jpg" alt="IntellibizOps"></div>
             <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div class="lang-switcher">
                     <button id="lang-en" class="lang-btn active" onclick="setLang('en')">EN</button>
@@ -973,7 +969,7 @@
         // ============================================
         // WAITLIST FORM — redirects to Streamlit waitlist for GDPR-compliant capture
         // ============================================
-        const WAITLIST_REDIRECT_URL = 'http://localhost:8501/?waitlist=1';
+        const WAITLIST_REDIRECT_URL = 'http://localhost:8080/?waitlist=1';
 
         function submitWaitlist() {
             const ids = ['name-input', 'cta-name-input'];
