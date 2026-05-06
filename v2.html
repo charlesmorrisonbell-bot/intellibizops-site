@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IntellibizOps — AI-Powered Business Operations</title>
+<link rel="icon" type="image/jpeg" href="/assets/img/intellibizopsbrain.jpg">
+<link rel="apple-touch-icon" href="/assets/img/intellibizopsbrain.jpg">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --cyan:#00D4FF;--purple:#7B61FF;--green:#00FF88;
+  --bg:#020408;--surface:rgba(6,10,20,0.9);
+  --border:rgba(0,212,255,0.1);--text:#E2E8F0;--muted:#64748B;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;overflow-x:hidden}
+
+/* Grid overlay */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,212,255,0.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,0.022) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;z-index:0}
+
+/* Scanlines */
+body::after{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,
+    rgba(0,0,0,0.012) 3px,rgba(0,0,0,0.012) 4px);
+  pointer-events:none;z-index:1000}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--cyan);border-radius:3px}
+
+#particleCanvas{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:1;pointer-events:none}
+
+/* Floating orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0}
+.orb-1{width:700px;height:700px;background:rgba(0,212,255,0.045);top:-250px;left:-150px;animation:o1 20s ease-in-out infinite}
+.orb-2{width:550px;height:550px;background:rgba(123,97,255,0.06);top:35%;right:-180px;animation:o2 25s ease-in-out infinite}
+.orb-3{width:450px;height:450px;background:rgba(0,212,255,0.035);bottom:5%;left:15%;animation:o3 18s ease-in-out infinite}
+@keyframes o1{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(50px,40px) scale(1.12)}75%{transform:translate(-30px,60px) scale(0.92)}}
+@keyframes o2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,-50px) scale(1.1)}}
+@keyframes o3{0%,100%{transform:translate(0,0)}40%{transform:translate(60px,-35px)}80%{transform:translate(-25px,25px)}}
+
+.content{position:relative;z-index:10}
+
+/* ── Navbar ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  background:rgba(2,4,8,0.75);border-bottom:1px solid var(--border);
+  transition:all 0.3s}
+nav.scrolled{background:rgba(2,4,8,0.97);border-bottom-color:rgba(0,212,255,0.18);
+  box-shadow:0 4px 40px rgba(0,212,255,0.06)}
+.nav-content{max-width:80rem;margin:0 auto;padding:0.9rem 2rem;
+  display:flex;justify-content:space-between;align-items:center}
+.logo img{height:58px;width:auto;display:block;border-radius:8px}
+.nav-right{display:flex;gap:0.75rem;align-items:center}
+.lang-switcher{display:flex;align-items:center;gap:0.2rem}
+.lang-btn{background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:0.78rem;font-weight:700;padding:0.25rem 0.5rem;border-radius:4px;transition:color 0.2s;letter-spacing:1px}
+.lang-btn.active{color:var(--cyan)}
+.lang-sep{color:var(--muted);font-size:0.78rem}
+.btn-nav{padding:0.55rem 1.2rem;border:1px solid var(--cyan);color:var(--cyan);
+  border-radius:6px;font-weight:600;cursor:pointer;transition:all 0.3s;
+  background:transparent;font-size:0.88rem;letter-spacing:0.5px;text-decoration:none;display:inline-block}
+.btn-nav:hover{background:var(--cyan);color:var(--bg);box-shadow:0 0 25px rgba(0,212,255,0.45)}
+
+body.lang-en .lang-pl,body.lang-pl .lang-en{display:none}
+
+/* ── Hero ── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:9rem 2rem 5rem;position:relative;overflow:hidden}
+.hero-mesh{position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 65% 65% at 12% 12%,rgba(0,212,255,0.13) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 60% at 88% 88%,rgba(123,97,255,0.13) 0%,transparent 55%),
+    radial-gradient(ellipse 45% 45% at 65% 18%,rgba(0,212,255,0.07) 0%,transparent 50%);
+  animation:meshPulse 12s ease-in-out infinite alternate}
+@keyframes meshPulse{0%{opacity:0.5;transform:scale(1)}100%{opacity:1;transform:scale(1.06)}}
+
+.hero-content{max-width:880px;position:relative;z-index:2}
+
+.status-badge{display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.4rem 1.1rem;margin-bottom:1.75rem;
+  border:1px solid rgba(0,212,255,0.22);border-radius:999px;
+  background:rgba(0,212,255,0.05);
+  font-size:0.72rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--cyan);font-weight:700}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 8px var(--green);animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 6px var(--green)}50%{box-shadow:0 0 14px var(--green),0 0 28px rgba(0,255,136,0.3)}}
+
+.eyebrow{font-size:0.88rem;color:var(--cyan);text-transform:uppercase;
+  letter-spacing:3px;margin-bottom:1.1rem;font-weight:600}
+
+.hero h1{font-size:clamp(3rem,9vw,5.2rem);line-height:1.08;
+  margin:0.75rem 0;font-weight:900;letter-spacing:-2.5px}
+.gradient-text{
+  background:linear-gradient(135deg,var(--cyan) 0%,var(--purple) 50%,var(--cyan) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gradShift 5s linear infinite,glitch 14s steps(1) infinite}
+@keyframes gradShift{0%{background-position:0% center}100%{background-position:200% center}}
+@keyframes glitch{
+  0%,88%,100%{filter:none;transform:none}
+  89%{filter:hue-rotate(55deg);transform:skewX(-2deg) translateX(-3px)}
+  90%{filter:none;transform:none}
+  91%{filter:hue-rotate(-55deg);transform:skewX(1.5deg) translateX(3px)}
+  92%{filter:none;transform:none}
+  93%{transform:translateX(-1px)}
+  94%{filter:none;transform:none}}
+
+.subheadline{font-size:1.18rem;color:var(--muted);
+  margin:1.5rem auto 2.5rem;line-height:1.72;max-width:650px}
+
+.hero-form{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;
+  max-width:540px;margin:0 auto 1rem}
+.hero-form input{flex:1;min-width:240px;padding:1rem 1.5rem;
+  border:1px solid rgba(0,212,255,0.28);
+  background:rgba(0,212,255,0.04);color:var(--text);
+  border-radius:8px;font-size:1rem;transition:all 0.3s}
+.hero-form input:focus{outline:none;border-color:var(--cyan);
+  background:rgba(0,212,255,0.08);box-shadow:0 0 24px rgba(0,212,255,0.2)}
+.hero-form input::placeholder{color:var(--muted)}
+
+.btn-primary{position:relative;padding:1rem 2rem;overflow:hidden;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  color:#fff;border:none;border-radius:8px;font-weight:700;
+  cursor:pointer;font-size:1rem;transition:all 0.3s;white-space:nowrap}
+.btn-primary::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,0.18),transparent 70%);
+  transform:translateX(-150%);transition:transform 0.45s ease}
+.btn-primary:hover::before{transform:translateX(150%)}
+.btn-primary:hover{box-shadow:0 0 35px rgba(0,212,255,0.45),0 0 70px rgba(123,97,255,0.2);transform:translateY(-3px)}
+
+.form-note{font-size:0.78rem;color:var(--muted);margin-top:0.6rem}
+.form-note a{color:var(--cyan);text-decoration:none}
+.trust-line{margin-top:1.5rem;font-size:0.88rem;color:var(--muted)}
+
+/* ── Trust ticker ── */
+.trust-strip{position:relative;z-index:10;padding:1.75rem 0;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+.trust-strip::before,.trust-strip::after{content:'';position:absolute;
+  top:0;bottom:0;width:140px;z-index:2;pointer-events:none}
+.trust-strip::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.trust-strip::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.trust-track{display:flex;gap:0;width:max-content;animation:ticker 30s linear infinite}
+.trust-item{display:flex;align-items:center;gap:0.6rem;
+  padding:0 2.5rem;font-size:0.88rem;color:var(--muted);white-space:nowrap}
+.trust-item svg{color:var(--cyan);flex-shrink:0}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── Section ── */
+.section{padding:7rem 2rem;max-width:80rem;margin:0 auto;position:relative;z-index:10}
+.section h2{font-size:clamp(2rem,5vw,3.2rem);text-align:center;
+  font-weight:900;letter-spacing:-1.5px;margin-bottom:0.75rem}
+.section-sub{text-align:center;color:var(--muted);font-size:1.05rem;margin-bottom:4rem}
+
+/* ── Animated border property ── */
+@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes spinAngle{to{--angle:360deg}}
+
+/* ── Cards ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+
+.card{position:relative;padding:1px;border-radius:1rem;
+  background:var(--border);transition:background 0.4s,box-shadow 0.4s,transform 0.12s;
+  animation:spinAngle 6s linear infinite}
+.card::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:conic-gradient(from var(--angle),transparent 0%,transparent 25%,
+    var(--cyan) 40%,var(--purple) 60%,transparent 75%,transparent 100%);
+  opacity:0;transition:opacity 0.4s;animation:spinAngle 4s linear infinite}
+.card:hover::before{opacity:1}
+.card:hover{background:transparent;box-shadow:0 25px 70px rgba(0,0,0,0.5),0 0 40px rgba(0,212,255,0.08)}
+.card-inner{background:var(--surface);border-radius:calc(1rem - 1px);
+  padding:2rem;text-align:center;position:relative;z-index:1;height:100%}
+
+/* Holographic sheen */
+.card-inner::after{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+    rgba(255,255,255,0.055) 0%,transparent 55%);
+  opacity:0;transition:opacity 0.3s;pointer-events:none}
+.card:hover .card-inner::after{opacity:1}
+
+.card-icon{margin-bottom:1.25rem}
+.card-icon img{width:110px;height:auto;border-radius:12px;
+  box-shadow:0 0 22px rgba(0,212,255,0.25)}
+.card-emoji{font-size:3.2rem;display:block}
+.card h3{font-size:1.25rem;font-weight:700;margin-bottom:0.75rem}
+.card p{color:var(--muted);line-height:1.65;font-size:0.94rem}
+
+/* ── Steps ── */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:2rem;position:relative;margin-top:2rem}
+.steps::before{content:'';position:absolute;top:2.4rem;left:12%;right:12%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan) 30%,var(--purple) 70%,transparent);
+  opacity:0.35}
+.step{text-align:center;padding:1.5rem 1rem}
+.step-num{width:3.8rem;height:3.8rem;border-radius:50%;margin:0 auto 1.25rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.25rem;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  box-shadow:0 0 20px rgba(0,212,255,0.35);
+  animation:stepGlow 3s ease-in-out infinite}
+.step:nth-child(2) .step-num{animation-delay:1s}
+.step:nth-child(3) .step-num{animation-delay:2s}
+@keyframes stepGlow{
+  0%,100%{box-shadow:0 0 20px rgba(0,212,255,0.35)}
+  50%{box-shadow:0 0 40px rgba(0,212,255,0.7),0 0 80px rgba(123,97,255,0.25)}}
+.step h3{font-size:1.15rem;font-weight:700;margin-bottom:0.5rem}
+.step p{color:var(--muted);font-size:0.93rem;line-height:1.55}
+
+/* ── Features ── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:1.25rem;margin-top:2rem}
+.feature{position:relative;padding:1px;border-radius:1rem;
+  background:rgba(123,97,255,0.1);transition:background 0.4s,transform 0.12s;
+  animation:spinAngle 7s linear infinite}
+.feature::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:conic-gradient(from var(--angle),transparent 0%,transparent 25%,
+    var(--purple) 40%,var(--cyan) 60%,transparent 75%,transparent 100%);
+  opacity:0;transition:opacity 0.4s;animation:spinAngle 5s linear infinite}
+.feature:hover::before{opacity:1}
+.feature:hover{background:transparent}
+.feature-inner{background:rgba(6,10,20,0.88);border-radius:calc(1rem - 1px);
+  padding:1.75rem 1.25rem;text-align:center;position:relative;z-index:1;height:100%}
+.feature-inner::after{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+    rgba(123,97,255,0.08) 0%,transparent 60%);
+  opacity:0;transition:opacity 0.3s;pointer-events:none}
+.feature:hover .feature-inner::after{opacity:1}
+.feature-icon{margin-bottom:1rem}
+.feature-icon img{width:96px;height:auto;border-radius:10px;
+  box-shadow:0 0 18px rgba(0,212,255,0.22)}
+.feature h3{font-size:0.97rem;font-weight:700}
+
+/* ── CTA section ── */
+.cta-wrap{position:relative;z-index:10;padding:8rem 2rem;text-align:center;overflow:hidden}
+.cta-glow{position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(0,212,255,0.06) 0%,transparent 65%),
+    radial-gradient(ellipse 60% 40% at 50% 50%,rgba(123,97,255,0.07) 0%,transparent 65%);
+  animation:ctaBreath 7s ease-in-out infinite alternate}
+@keyframes ctaBreath{0%{opacity:0.6}100%{opacity:1}}
+.cta-rings{position:absolute;top:50%;left:50%;pointer-events:none}
+.cring{position:absolute;border-radius:50%;border:1px solid rgba(0,212,255,0.08);
+  transform:translate(-50%,-50%);animation:ringOut 4.5s ease-out infinite}
+.cring:nth-child(1){width:280px;height:280px}
+.cring:nth-child(2){width:480px;height:480px;animation-delay:1.5s}
+.cring:nth-child(3){width:680px;height:680px;animation-delay:3s}
+@keyframes ringOut{
+  0%{opacity:0.6;transform:translate(-50%,-50%) scale(0.85)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}
+.cta-content{position:relative;z-index:2;max-width:620px;margin:0 auto}
+.cta-wrap h2{font-size:clamp(2rem,5vw,3rem);font-weight:900;
+  letter-spacing:-1.5px;margin-bottom:1rem}
+.cta-wrap p{color:var(--muted);margin-bottom:2rem;font-size:1.05rem}
+.cta-form{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;max-width:480px;margin:0 auto}
+.cta-form input{flex:1;min-width:220px;padding:1rem 1.5rem;
+  border:1px solid rgba(0,212,255,0.28);background:rgba(0,212,255,0.04);
+  color:var(--text);border-radius:8px;font-size:1rem;transition:all 0.3s}
+.cta-form input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 20px rgba(0,212,255,0.2)}
+.cta-form input::placeholder{color:var(--muted)}
+
+/* ── Footer ── */
+footer{position:relative;z-index:10;padding:3rem 2rem;
+  border-top:1px solid var(--border);text-align:center;
+  color:var(--muted);font-size:0.83rem}
+footer a{color:var(--muted);text-decoration:none;transition:color 0.2s}
+footer a:hover{color:var(--cyan)}
+.foot-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-top:0.75rem}
+
+/* ── Cookie ── */
+.cookie{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  background:rgba(6,10,20,0.97);border:1px solid var(--border);
+  border-radius:12px;padding:1rem 1.5rem;z-index:999;
+  max-width:560px;width:calc(100% - 2rem);
+  backdrop-filter:blur(20px);box-shadow:0 10px 50px rgba(0,0,0,0.45);
+  display:none;flex-wrap:wrap;gap:0.75rem;align-items:center}
+.cookie p{flex:1;min-width:200px;font-size:0.83rem;color:var(--muted)}
+.cookie p a{color:var(--cyan);text-decoration:none}
+.cookie-btns{display:flex;gap:0.5rem}
+.c-accept{padding:0.5rem 1.25rem;background:var(--cyan);color:var(--bg);
+  border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:0.83rem}
+.c-decline{padding:0.5rem 1rem;background:transparent;color:var(--muted);
+  border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:0.83rem}
+
+/* ── Scroll reveal ── */
+.fade-in{opacity:0;transform:translateY(32px);
+  transition:opacity 0.75s ease,transform 0.75s ease}
+.fade-in.visible{opacity:1;transform:none}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .nav-content{padding:0.75rem 1.25rem}
+  .logo img{height:42px}
+  .steps::before{display:none}
+  .hero{padding:7rem 1.5rem 4rem}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- Cookie -->
+<div class="cookie" id="cookieBanner">
+  <p>
+    <span class="lang-en">We use cookies to improve your experience. See our <a href="/legal/privacy">Privacy Policy</a>.</span>
+    <span class="lang-pl">Używamy plików cookie. Zobacz <a href="/legal/privacy">Politykę prywatności</a>.</span>
+  </p>
+  <div class="cookie-btns">
+    <button class="c-accept" onclick="acceptCookies()"><span class="lang-en">Accept</span><span class="lang-pl">Akceptuj</span></button>
+    <button class="c-decline" onclick="declineCookies()"><span class="lang-en">Decline</span><span class="lang-pl">Odrzuć</span></button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- Nav -->
+<nav id="navbar">
+  <div class="nav-content">
+    <div class="logo"><img src="/assets/img/IntellibizopsLogo.jpg" alt="IntellibizOps"></div>
+    <div class="nav-right">
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="lang-en-btn" onclick="setLang('en')">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn" id="lang-pl-btn" onclick="setLang('pl')">PL</button>
+      </div>
+      <a id="login-link" href="https://app.intellibizops.com" class="btn-nav">
+        <span class="lang-en">Sign in</span><span class="lang-pl">Zaloguj</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-mesh"></div>
+  <div class="hero-content">
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span class="lang-en">AI OPERATIONAL</span><span class="lang-pl">AI AKTYWNY</span>
+    </div>
+    <p class="eyebrow">
+      <span class="lang-en">AI-Powered Business Operations</span>
+      <span class="lang-pl">Operacje biznesowe oparte na AI</span>
+    </p>
+    <h1>
+      <span class="lang-en">Run Your Business<br><span class="gradient-text">Without the Chaos</span></span>
+      <span class="lang-pl">Prowadź firmę<br><span class="gradient-text">Bez chaosu</span></span>
+    </h1>
+    <p class="subheadline">
+      <span class="lang-en">Your AI co-pilot handles staff scheduling, inventory, financials, and menu — so you can focus on what matters.</span>
+      <span class="lang-pl">Twój asystent AI obsługuje grafiki, magazyn, finanse i menu — byś mógł skupić się na tym, co ważne.</span>
+    </p>
+    <div class="hero-form">
+      <input type="text" id="name-input" placeholder="Your name or business" autocomplete="off">
+      <button class="btn-primary" onclick="submitWaitlist()">
+        <span class="lang-en">Get Early Access</span><span class="lang-pl">Uzyskaj wczesny dostęp</span>
+      </button>
+    </div>
+    <p class="form-note">
+      <span class="lang-en">Email collected on next step. See </span>
+      <span class="lang-pl">E-mail podasz w kolejnym kroku. Zobacz </span>
+      <a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.
+    </p>
+    <div class="trust-line">✨ <span class="lang-en">Built for cafés, shops &amp; SMEs</span><span class="lang-pl">Stworzone dla kawiarni, sklepów i MŚP</span></div>
+  </div>
+</section>
+
+<!-- Trust ticker -->
+<div class="trust-strip">
+  <div class="trust-track" id="trustTrack">
+    <div class="trust-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg><span class="lang-en">Hosted in EU (Germany)</span><span class="lang-pl">Hostowane w UE</span></div>
+    <div class="trust-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/></svg><span class="lang-en">GDPR Compliant</span><span class="lang-pl">Zgodny z RODO</span></div>
+    <div class="trust-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="lang-en">Enterprise Security</span><span class="lang-pl">Bezpieczeństwo enterprise</span></div>
+    <div class="trust-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span class="lang-en">No Credit Card Required</span><span class="lang-pl">Bez karty kredytowej</span></div>
+    <div class="trust-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span class="lang-en">Cancel Anytime</span><span class="lang-pl">Anuluj w każdej chwili</span></div>
+    <div class="trust-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span class="lang-en">24/7 AI Monitoring</span><span class="lang-pl">Monitoring AI 24/7</span></div>
+  </div>
+</div>
+
+<!-- Problem -->
+<section class="section">
+  <h2><span class="lang-en">Sound familiar?</span><span class="lang-pl">Brzmi znajomo?</span></h2>
+  <p class="section-sub"><span class="lang-en">Running a small business shouldn't feel like this.</span><span class="lang-pl">Prowadzenie małej firmy nie powinno tak wyglądać.</span></p>
+  <div class="cards-grid">
+    <div class="card fade-in">
+      <div class="card-inner">
+        <div class="card-icon"><img src="/assets/img/icon-too-many-apps.jpg?v=2" alt="Too Many Apps"></div>
+        <h3><span class="lang-en">Too Many Apps</span><span class="lang-pl">Za dużo aplikacji</span></h3>
+        <p><span class="lang-en">Juggling spreadsheets, booking apps, inventory systems, cash registers... it never ends.</span><span class="lang-pl">Arkusze, aplikacje, systemy magazynowe, kasy... to nigdy się nie kończy.</span></p>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-inner">
+        <div class="card-icon"><img src="/assets/img/icon-no-time.jpg?v=4" alt="No Time to Analyse"></div>
+        <h3><span class="lang-en">No Time to Analyse</span><span class="lang-pl">Brak czasu na analizę</span></h3>
+        <p><span class="lang-en">You're too busy running the shop to spot trends, fix problems, or plan ahead.</span><span class="lang-pl">Jesteś zbyt zajęty prowadzeniem firmy, żeby dostrzegać trendy i planować.</span></p>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="card-inner">
+        <div class="card-icon"><span class="card-emoji">❌</span></div>
+        <h3><span class="lang-en">Missed Shifts &amp; Stock-outs</span><span class="lang-pl">Luki w grafiku i braki magazynowe</span></h3>
+        <p><span class="lang-en">Staff gaps appear. Stock runs low. Opportunities slip away.</span><span class="lang-pl">Pojawiają się luki w grafiku. Zapasy maleją. Okazje uciekają.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section">
+  <h2><span class="lang-en">How IntellibizOps Works</span><span class="lang-pl">Jak działa IntellibizOps</span></h2>
+  <p class="section-sub"><span class="lang-en">Simple, powerful, always in your control.</span><span class="lang-pl">Proste, potężne, zawsze pod Twoją kontrolą.</span></p>
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">1</div>
+      <h3><span class="lang-en">AI Monitors</span><span class="lang-pl">AI monitoruje</span></h3>
+      <p><span class="lang-en">Your AI co-pilot watches sales, stock, and schedules 24/7.</span><span class="lang-pl">Twój asystent AI obserwuje wszystko całą dobę.</span></p>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">2</div>
+      <h3><span class="lang-en">Spots Issues</span><span class="lang-pl">Wykrywa problemy</span></h3>
+      <p><span class="lang-en">It finds gaps, low stock, and scheduling problems before they cost you.</span><span class="lang-pl">Wykrywa luki i problemy zanim będzie za późno.</span></p>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">3</div>
+      <h3><span class="lang-en">You Approve</span><span class="lang-pl">Ty zatwierdzasz</span></h3>
+      <p><span class="lang-en">Nothing changes without your say-so. You're always in control.</span><span class="lang-pl">Nic się nie zmienia bez Twojej zgody.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+  <h2><span class="lang-en">Everything You Need</span><span class="lang-pl">Wszystko, czego potrzebujesz</span></h2>
+  <p class="section-sub"><span class="lang-en">One platform to replace them all.</span><span class="lang-pl">Jedna platforma zamiast wszystkich.</span></p>
+  <div class="features-grid">
+    <div class="feature fade-in"><div class="feature-inner"><div class="feature-icon"><img src="/assets/img/icon-staff-scheduling.jpg?v=2" alt="Staff Scheduling"></div><h3><span class="lang-en">Staff Scheduling</span><span class="lang-pl">Grafik pracowników</span></h3></div></div>
+    <div class="feature fade-in"><div class="feature-inner"><div class="feature-icon"><img src="/assets/img/icon-inventory.jpg?v=2" alt="Inventory"></div><h3><span class="lang-en">Inventory &amp; Reorders</span><span class="lang-pl">Magazyn i zamówienia</span></h3></div></div>
+    <div class="feature fade-in"><div class="feature-inner"><div class="feature-icon"><img src="/assets/img/icon-menu-management.jpg?v=3" alt="Menu Management"></div><h3><span class="lang-en">Menu Management</span><span class="lang-pl">Zarządzanie menu</span></h3></div></div>
+    <div class="feature fade-in"><div class="feature-inner"><div class="feature-icon"><img src="/assets/img/icon-ai-chat.jpg?v=3" alt="AI Chat"></div><h3><span class="lang-en">AI Chat Assistant</span><span class="lang-pl">Asystent czatu AI</span></h3></div></div>
+    <div class="feature fade-in"><div class="feature-inner"><div class="feature-icon"><img src="/assets/img/icon-financial-tracking.jpg?v=2" alt="Financial Tracking"></div><h3><span class="lang-en">Financial Tracking</span><span class="lang-pl">Śledzenie finansów</span></h3></div></div>
+    <div class="feature fade-in"><div class="feature-inner"><div class="feature-icon"><img src="/assets/img/icon-approval-queue.jpg?v=4" alt="Approval Queue"></div><h3><span class="lang-en">One Approval Queue</span><span class="lang-pl">Jedna kolejka zatwierdzeń</span></h3></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <div class="cta-glow"></div>
+  <div class="cta-rings"><div class="cring"></div><div class="cring"></div><div class="cring"></div></div>
+  <div class="cta-content">
+    <h2><span class="lang-en">Ready to take back control?</span><span class="lang-pl">Gotowy przejąć kontrolę?</span></h2>
+    <p><span class="lang-en">Join the waitlist — early access launching soon for cafés and shops.</span><span class="lang-pl">Dołącz do listy oczekujących — wczesny dostęp dla kawiarni i sklepów.</span></p>
+    <div class="cta-form">
+      <input type="text" id="cta-name-input" placeholder="Your name or business" autocomplete="off">
+      <button class="btn-primary" onclick="submitWaitlist()">
+        <span class="lang-en">Get Early Access</span><span class="lang-pl">Uzyskaj wczesny dostęp</span>
+      </button>
+    </div>
+    <p class="form-note" style="margin-top:1rem">
+      <span class="lang-en">See our </span><span class="lang-pl">Zobacz </span>
+      <a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Politykę prywatności</span></a>.
+    </p>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2026 IntellibizOps. <span class="lang-en">All rights reserved.</span><span class="lang-pl">Wszelkie prawa zastrzeżone.</span></p>
+  <div class="foot-links">
+    <a href="/legal/privacy"><span class="lang-en">Privacy Policy</span><span class="lang-pl">Polityka prywatności</span></a>
+    <a href="/legal/terms"><span class="lang-en">Terms of Service</span><span class="lang-pl">Regulamin</span></a>
+    <a href="/legal/subprocessors"><span class="lang-en">Subprocessors</span><span class="lang-pl">Podprzetwarzający</span></a>
+  </div>
+  <p style="margin-top:0.75rem;font-size:0.75rem">
+    <span class="lang-en">IntellibizOps Ltd · EU-hosted · GDPR compliant · support@intellibizops.com</span>
+    <span class="lang-pl">IntellibizOps Ltd · Hostowane w UE · Zgodne z RODO · support@intellibizops.com</span>
+  </p>
+</footer>
+
+</div>
+
+<script>
+const WAITLIST_REDIRECT_URL='http://localhost:8080/?waitlist=1';
+
+// Language
+function setLang(l){
+  document.body.className=document.body.className.replace(/lang-\w+/,'')+' lang-'+l;
+  document.getElementById('lang-en-btn').classList.toggle('active',l==='en');
+  document.getElementById('lang-pl-btn').classList.toggle('active',l==='pl');
+  localStorage.setItem('lang',l);
+  const ph=l==='pl'?'Twoje imię lub nazwa firmy':'Your name or business';
+  ['name-input','cta-name-input'].forEach(id=>{const e=document.getElementById(id);if(e)e.placeholder=ph;});
+}
+(()=>{const s=localStorage.getItem('lang');if(s)setLang(s);})();
+
+// Waitlist
+function submitWaitlist(){
+  let name='';
+  for(const id of['name-input','cta-name-input']){
+    const e=document.getElementById(id);
+    if(e&&e.value.trim()){name=e.value.trim();break;}
+  }
+  if(!name){alert('Please enter your name or business name');return;}
+  window.location.href=`${WAITLIST_REDIRECT_URL}&name=${encodeURIComponent(name)}`;
+}
+
+// Login link
+(()=>{
+  const ll=document.getElementById('login-link');
+  if(ll&&(location.hostname==='localhost'||location.hostname==='127.0.0.1'))ll.href='http://localhost:8080/';
+})();
+
+// Navbar
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20);
+},{passive:true});
+
+// Cookies
+function acceptCookies(){localStorage.setItem('cookieConsent','accepted');document.getElementById('cookieBanner').style.display='none';}
+function declineCookies(){localStorage.setItem('cookieConsent','declined');document.getElementById('cookieBanner').style.display='none';}
+(()=>{if(!localStorage.getItem('cookieConsent'))document.getElementById('cookieBanner').style.display='flex';})();
+
+// Trust ticker — duplicate for seamless loop
+(()=>{
+  const t=document.getElementById('trustTrack');
+  if(t)t.innerHTML+=t.innerHTML;
+})();
+
+// Scroll reveal with stagger
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'),i*120);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// 3D tilt + holographic sheen
+document.querySelectorAll('.card,.feature').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width;
+    const y=(e.clientY-r.top)/r.height;
+    el.style.transform=`perspective(700px) rotateX(${(y-.5)*-13}deg) rotateY(${(x-.5)*13}deg) scale(1.025)`;
+    el.style.setProperty('--mx',`${x*100}%`);
+    el.style.setProperty('--my',`${y*100}%`);
+  });
+  el.addEventListener('mouseleave',()=>{el.style.transform='';});
+});
+
+// Magnetic buttons
+document.querySelectorAll('.btn-primary,.btn-nav').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const x=e.clientX-r.left-r.width/2;
+    const y=e.clientY-r.top-r.height/2;
+    btn.style.transform=`translate(${x*.14}px,${y*.14}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>{btn.style.transform='';});
+});
+
+// Enhanced particles with depth
+(()=>{
+  const canvas=document.getElementById('particleCanvas');
+  const ctx=canvas.getContext('2d');
+  let W,H;
+  const mobile=window.innerWidth<768;
+  const N=mobile?55:130;
+  const DIST=140;
+
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+
+  class P{
+    constructor(){this.init();}
+    init(){
+      this.x=Math.random()*W;
+      this.y=Math.random()*H;
+      this.z=Math.random();
+      this.r=0.7+this.z*2;
+      const s=0.12+this.z*0.38;
+      this.vx=(Math.random()-.5)*s;
+      this.vy=(Math.random()-.5)*s;
+      this.a=0.12+this.z*0.55;
+      this.cyan=Math.random()>.38;
+    }
+    move(){
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.x<-8)this.x=W+8;
+      if(this.x>W+8)this.x=-8;
+      if(this.y<-8)this.y=H+8;
+      if(this.y>H+8)this.y=-8;
+    }
+    draw(){
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${this.cyan?'0,212,255':'123,97,255'},${this.a})`;
+      ctx.fill();
+    }
+  }
+
+  const ps=Array.from({length:N},()=>new P());
+
+  function lines(){
+    for(let i=0;i<ps.length;i++){
+      for(let j=i+1;j<ps.length;j++){
+        const a=ps[i],b=ps[j];
+        const dx=a.x-b.x,dy=a.y-b.y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<DIST){
+          const al=(1-d/DIST)*0.1*Math.min(a.z,b.z);
+          const g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+          g.addColorStop(0,`rgba(0,212,255,${al})`);
+          g.addColorStop(1,`rgba(123,97,255,${al})`);
+          ctx.beginPath();ctx.strokeStyle=g;ctx.lineWidth=0.5;
+          ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    lines();
+    ps.forEach(p=>{p.move();p.draw();});
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
