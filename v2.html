@@ -654,9 +654,8 @@ document.querySelectorAll('.btn-primary,.btn-nav').forEach(btn=>{
     }
   }
 
-  canvas.addEventListener('click',e=>{
-    const rect=canvas.getBoundingClientRect();
-    const x=e.clientX-rect.left,y=e.clientY-rect.top;
+  window.addEventListener('click',e=>{
+    const x=e.clientX,y=e.clientY;
     const n=24+Math.floor(Math.random()*14);
     for(let i=0;i<n;i++)exps.push(new Exp(x,y));
     rips.push(new Rip(x,y));
