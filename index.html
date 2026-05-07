@@ -359,6 +359,28 @@
         }
 
         /* Waitlist section */
+        /* Tagline statement */
+        .tagline-section {
+            padding: 5rem 2rem;
+            max-width: 60rem;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .tagline-quote {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            font-weight: 700;
+            line-height: 1.55;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #00D4FF 40%, #7B61FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border: none;
+            quotes: none;
+        }
+
         .waitlist-section {
             padding: 4rem 2rem;
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 97, 255, 0.1));
@@ -747,6 +769,14 @@
                 <span class="lang-en">Encrypted at rest (AES-128)</span><span class="lang-pl">Szyfrowanie danych (AES-128)</span>
             </div>
         </div>
+
+        <!-- Tagline statement -->
+        <section class="tagline-section fade-in">
+            <blockquote class="tagline-quote">
+                <span class="lang-en">"IntellibizOps gives every small business owner the AI operations team that only enterprise companies can currently afford — private, GDPR-safe, and priced for the market that actually needs it."</span>
+                <span class="lang-pl">„IntellibizOps daje każdemu właścicielowi małej firmy zespół operacyjny AI, na który stać tylko duże korporacje — prywatny, zgodny z RODO i wyceniony dla rynku, który naprawdę go potrzebuje."</span>
+            </blockquote>
+        </section>
 
         <!-- Waitlist CTA -->
         <section class="waitlist-section">
